@@ -47,11 +47,12 @@ export default function Home() {
   function addLiters(e: any) {
     e.preventDefault()
 
+    const litersDiff = litersLeft - Number(e.target.liters.value)
     localStorage.setItem('litersPerDay', JSON.stringify({
-      litersLeft: litersLeft - Number(e.target.liters.value),
+      litersLeft: litersDiff,
       date: format(new Date(), 'dd/MM/yyyy')
     }))
-    setLitersLeft(prevState => prevState - Number(e.target.liters.value))
+    setLitersLeft(litersDiff)
     e.target.liters.value = ''
   }
 
@@ -89,6 +90,7 @@ export default function Home() {
                 <input
                   className='p-2 border border-zinc-300 rounded-md focus:outline-none focus:ring'
                   name='liters'
+                  type='number'
                 />
                 <button
                   className='p-4 bg-green-400 rounded-lg hover:bg-green-600 transition duration-150 ease-in'
