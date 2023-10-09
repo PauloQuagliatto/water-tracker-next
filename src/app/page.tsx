@@ -53,11 +53,19 @@ export default function Home() {
     e.preventDefault()
 
     const litersDiff = litersLeft - Number(e.target.liters.value)
-    localStorage.setItem('litersPerDay', JSON.stringify({
-      litersLeft: litersDiff,
-      date: format(new Date(), 'dd/MM/yyyy')
-    }))
-    setLitersLeft(litersDiff)
+    if (litersDiff <= 0) {
+      localStorage.setItem('litersPerDay', JSON.stringify({
+        litersLeft: 0,
+        date: format(new Date(), 'dd/MM/yyyy')
+      }))
+      setLitersLeft(0)
+    } else {
+      localStorage.setItem('litersPerDay', JSON.stringify({
+        litersLeft: litersDiff,
+        date: format(new Date(), 'dd/MM/yyyy')
+      }))
+      setLitersLeft(litersDiff)
+    }
     e.target.liters.value = ''
   }
 
