@@ -51,8 +51,8 @@ export default function Home() {
       litersLeft: litersLeft - Number(e.target.liters.value),
       date: format(new Date(), 'dd/MM/yyyy')
     }))
-    e.target.liters.value = ''
     setLitersLeft(prevState => prevState - Number(e.target.liters.value))
+    e.target.liters.value = ''
   }
 
   litersLeft && setInterval(() => {
