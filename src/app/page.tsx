@@ -10,6 +10,11 @@ export default function Home() {
   const [intervalTime, setIntervalTime] = useState(0)
 
   useEffect(() => {
+    if (Notification.permission !== 'granted')
+      Notification.requestPermission().then((result) => {
+        console.log(result);
+      });
+
     const stringfyedUser = localStorage.getItem('user')
     if (stringfyedUser) {
       const savedUser = JSON.parse(stringfyedUser)
@@ -57,7 +62,9 @@ export default function Home() {
   }
 
   litersLeft && setInterval(() => {
-    window.alert(`Beba pelo menos 250ml de água`)
+    const notification = new Notification("Water tracker", { body: 'Hora de beber água' });
+
+    setTimeout(() => notification.close(), 2000)
   }, intervalTime)
 
 
