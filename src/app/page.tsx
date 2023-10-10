@@ -9,11 +9,17 @@ export default function Home() {
   const [litersLeft, setLitersLeft] = useState(0)
   const [intervalTime, setIntervalTime] = useState(0)
 
+  let interval: any
+  if (litersLeft)
+    interval = setInterval(() => {
+      const notification = new Notification("Water tracker", { body: 'Hora de beber água' });
+
+      setTimeout(() => notification.close(), 2500)
+    }, intervalTime)
+
   useEffect(() => {
     if (Notification.permission !== 'granted')
-      Notification.requestPermission().then((result) => {
-        console.log(result);
-      });
+      Notification.requestPermission()
 
     const stringfyedUser = localStorage.getItem('user')
     if (stringfyedUser) {
@@ -27,6 +33,10 @@ export default function Home() {
         setLitersLeft(savedUser.weight * 35)
         setIntervalTime(Math.round(hoursInMilliseconds / ((savedUser.weight * 35) / 250)))
       }
+    }
+
+    return () => {
+      clearTimeout(interval)
     }
   }, [])
 
@@ -69,11 +79,6 @@ export default function Home() {
     e.target.liters.value = ''
   }
 
-  litersLeft && setInterval(() => {
-    const notification = new Notification("Water tracker", { body: 'Hora de beber água' });
-
-    setTimeout(() => notification.close(), 2000)
-  }, intervalTime)
 
 
   function removeUserData() {
@@ -121,7 +126,6 @@ export default function Home() {
                   Alterar dados do usuário
                 </button>
               </form>
-
             </>
             :
             <>
