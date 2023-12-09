@@ -1,21 +1,24 @@
 'use client'
 import { format } from 'date-fns'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
-const hoursInMilliseconds = 16 * 60 * 60 * 1000
+const HOURS_IN_MILLISECONDS = 16 * 60 * 60 * 1000
 
 export default function Home() {
   const [user, setUser] = useState<any>(null)
   const [litersLeft, setLitersLeft] = useState(0)
   const [intervalTime, setIntervalTime] = useState(0)
+  const interval = useMemo(() => {
+    if (litersLeft)
+      return setTimeout(() => {
+        const notification = new Notification("Water tracker", { body: 'Hora de beber água' })
 
-  let interval: any
-  if (litersLeft)
-    interval = setInterval(() => {
-      const notification = new Notification("Water tracker", { body: 'Hora de beber água' });
+        setTimeout(() => notification.close(), 2500)
+      }, intervalTime)
 
-      setTimeout(() => notification.close(), 2500)
-    }, intervalTime)
+    return setTimeout(() => { }, 1)
+  }, [intervalTime, litersLeft])
+
 
   useEffect(() => {
     if (Notification.permission !== 'granted')
@@ -28,10 +31,10 @@ export default function Home() {
       setUser(savedUser)
       if (litersPerDay.date === format(new Date(), 'dd/MM/yyyy')) {
         setLitersLeft(litersPerDay.litersLeft)
-        setIntervalTime(Math.round(hoursInMilliseconds / (litersPerDay.litersLeft / 250)))
+        setIntervalTime(Math.round(HOURS_IN_MILLISECONDS / (litersPerDay.litersLeft / 250)))
       } else {
         setLitersLeft(savedUser.weight * 35)
-        setIntervalTime(Math.round(hoursInMilliseconds / ((savedUser.weight * 35) / 250)))
+        setIntervalTime(Math.round(HOURS_IN_MILLISECONDS / ((savedUser.weight * 35) / 250)))
       }
     }
 
@@ -55,7 +58,7 @@ export default function Home() {
     }))
     setUser(newUser)
     setLitersLeft(newUser.weight * 35)
-    setIntervalTime(Math.round(hoursInMilliseconds / ((newUser.weight * 35) / 250)))
+    setIntervalTime(Math.round(HOURS_IN_MILLISECONDS / ((newUser.weight * 35) / 250)))
   }
 
 
